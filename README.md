@@ -29,18 +29,20 @@ npm init 配置package.json文件
 我们将要使用Gulp插件来完成以下任务：
 
 * less的编译（gulp-less）
+* sass的编译（gulp-ruby-sass）
 * 压缩js代码（gulp-uglify）
 * 压缩css（gulp-minify-css）
 * 压缩html（gulp-minify-html）
 * 压缩图片（gulp-imagemin）
 * 图片缓存（gulp-cache）
 * 文件重命名（gulp-rename）
+* 浏览器实时刷新（gulp-connect）
 * 更改提醒（gulp-notify）
 * 清除文件（del）
 
 安装以上插件
 
-```npm install gulp-less gulp-uglify gulp-minify-css gulp-minify-html gulp-imagemin gulp-cache gulp-rename gulp-notify  del --save-dev
+```npm install gulp-less gulp-ruby-sass gulp-connect gulp-uglify gulp-minify-css gulp-minify-html gulp-imagemin gulp-cache gulp-rename gulp-notify  del --save-dev
 ```
 
 ##4. 新建gulpfile.js文件

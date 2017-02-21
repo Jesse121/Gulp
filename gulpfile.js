@@ -1,6 +1,5 @@
 //导入工具包 require('node_modules里对应模块')
 var gulp      = require('gulp');				    //本地安装gulp所用到的地方
-var less      = require('gulp-less');			    // 获取 gulp-less 模块（用于编译Less）
 var	jsmin     = require('gulp-uglify');			    //JS文件压缩 
 var cssmin    = require('gulp-minify-css');         //css文件压缩
 var htmlmin   = require('gulp-minify-html');        //html文件压缩
@@ -9,19 +8,54 @@ var imgmin    = require('gulp-imagemin');           //图片压缩
 var notify    = require('gulp-notify');             //更动通知
 var rename    = require('gulp-rename');             //重命名
 var del       = require('del');
-//var sass      = require('gulp-ruby-sass');          //编译SASS
+var sass      = require('gulp-ruby-sass');          //编译SASS
+var connect   = require('gulp-connect');            //实时刷新浏览器
+// var less      = require('gulp-less');			    // 编译Less
 // var jshint    = require('gulp-jshint');			//js代码检查
 // var contact   = require('gulp-contact');		   //合并js或css文件等
 
 //docs 开发环境
 //dist 发布环境
+//demo 项目名称
+//每做一个项目需要修改项目名称
 
 //gulp.task(name[, deps], fn)   定义任务  name：任务名称 deps：依赖任务名称 fn：回调函数
 //gulp.src(globs[, options])    执行任务处理的文件  globs：处理的文件路径(字符串或者字符串数组) 
 //gulp.dest(path[, options])    处理完后文件生成路径
 //gulp.watch(glob[, opts], tasks) 监视文件，并且可以在文件发生改动时候做一些事情。
 
-//定义一个less任务（自定义任务名称）
+//**********************************//
+//以下是开发过程中的需要执行各种任务//
+//**********************************//
+
+
+
+//浏览器自动刷新页面
+gulp.task('connect', function() {
+    connect.server({
+        // host: '192.168.1.172', //地址，可不写，不写的话，默认localhost
+        port: 3000, //端口号，可不写，默认8000
+        root: './docs/', //当前项目主目录
+        livereload: true //自动刷新
+    });
+});
+
+//html文件有变化时，自动更新
+gulp.task('html', function() {
+    gulp.src('docs/demo/*.html')
+        .pipe(connect.reload())
+        .pipe(notify({ message: 'html has change' }));
+});
+
+//编译SASS  gulp sass
+gulp.task('sass', function(){
+    sass('docs/demo/css/scss/*.scss')
+    .on('error', sass.logError)
+    .pipe(gulp.dest('docs/demo/css/'))
+    .pipe(notify({ message: 'css has change' }))
+    .pipe(connect.reload());
+})
+
 // 编译Less ,在命令行项目目录下使用 gulp less 启动此任务
 // gulp.task('less', function () {
 //     gulp.src('docs/*/less/*.less')            //该任务针对的文件
@@ -29,56 +63,13 @@ var del       = require('del');
 //         .pipe(gulp.dest('dist/css'))          //将会在dist/css下生成对应的css文件
 //         .pipe(notify({ message: 'less task complete' }));
 // });
-
-//css文件压缩,在命令行项目目录下使用 gulp cssmin 启动此任务
-gulp.task('cssmin', function () {
-    gulp.src('docs/*/css/*.css')
-        .pipe(cssmin({
-            advanced: false,//类型：Boolean 默认：true [是否开启高级优化（合并选择器等）]
-            compatibility: 'ie7',//保留ie7及以下兼容写法 类型：String 默认：''or'*' [启用兼容模式； 'ie7'：IE7兼容模式，'ie8'：IE8兼容模式，'*'：IE9+兼容模式]
-            keepBreaks: false//类型：Boolean 默认：false [是否保留换行]
-        }))
-        .pipe(rename({ suffix: '.min' }))  //对压缩后的文件重命名
-        .pipe(gulp.dest('dist'))
-        .pipe(notify({ message: 'cssmin task complete' }));
-});
-
-// js文件压缩 ,在命令行项目目录下使用 gulp jsmin 启动此任务
-gulp.task('jsmin', function() {
-    gulp.src('docs/*/js/*.js')              // 1. 找到文件
-        .pipe(jsmin())                       // 2. 压缩文件
-        .pipe(rename({extname:'.min.js'}))   // 3.对压缩文件重命名
-        .pipe(gulp.dest('dist'))             // 4. 输出压缩后的文件
-        .pipe(notify({ message: 'jsmin task complete' }));
-});
  
-//图片压缩,在命令行项目目录下使用 gulp imgmin 启动此任务
-gulp.task('imgmin', function() {
-    gulp.src('docs/*/img/**/*.{png,jpg,gif,ico}')
-	    .pipe(cache(imgmin({
-            optimizationLevel: 5,//类型：Number  默认：3  取值范围：0-7（优化等级）
-            progressive: true,   //类型：Boolean 默认：false 无损压缩jpg图片
-            interlaced: true,    //类型：Boolean 默认：false 隔行扫描gif进行渲染
-            multipass: true      //类型：Boolean 默认：false 多次优化svg直到完全优化
-        })))
-	    .pipe(gulp.dest('dist'))
-	    .pipe(notify({ message: 'imagemin task complete' }));
+//js文件有变化时，自动更新
+gulp.task('js', function() {
+    gulp.src('docs/demo/js/*.js')
+        .pipe(notify({ message: 'javascript has change' }))
+        .pipe(connect.reload());
 });
-
-//html文件压缩,在命令行项目目录下使用 gulp htmlmin 启动此任务
-gulp.task('htmlmin', function () {
-    gulp.src('docs/*/*.html')       // 要压缩的html文件
-        .pipe(htmlmin())            //压缩
-        .pipe(gulp.dest('dist'))
-        .pipe(notify({ message: 'htmlmin task complete' }));
-});
-
-//字体文件复制
-gulp.task('fonts',function(){
-    gulp.src('docs/*/fonts')
-        .pipe(gulp.dest('dist'))
-        .pipe(notify({message: 'fonts task complete'}));
-})
 
 // js代码检查
 // gulp.task('jshint', function() {
@@ -90,6 +81,85 @@ gulp.task('fonts',function(){
 // });
 
 
+
+//**********************************//
+//以下是开发调试过程中的各种监听任务//
+//**********************************//
+
+// 监听文件变化,在命令行项目目录下使用 gulp watch启动此任务,监听的文件有变化就自动执行
+gulp.task('watch',function(){
+    //监听HTML
+    gulp.watch('docs/demo/*.html',['html']);
+    //监听css
+    gulp.watch('docs/demo/css/scss/*.scss',['sass']);
+    //监听js
+    gulp.watch('docs/demo/js/*.js',['js']);
+});
+
+//项目开始编码时，执行gulp命令打开服务器并监听各文件变化，浏览器实时刷新
+gulp.task('default',['clean','watch','connect']);
+
+
+
+//******************************************//
+//以下是开发结束后打包到生产环境中的各种任务//
+//******************************************//
+
+//在任务执行前，最好先清除之前生成的文件： gulp clean
+gulp.task('clean', function() {
+     return del(['dist']);  //删除发布环境文件
+});
+
+//html文件压缩,在命令行项目目录下使用 gulp htmlmin 启动此任务
+gulp.task('htmlmin', function () {
+    gulp.src('docs/demo/*.html')       // 要压缩的html文件
+        .pipe(htmlmin())            //压缩
+        .pipe(gulp.dest('dist/demo/'))
+});
+
+//css文件压缩,在命令行项目目录下使用 gulp cssmin 启动此任务
+gulp.task('cssmin', function () {
+    gulp.src('docs/demo/css/*.css')
+        .pipe(cssmin({
+            //类型：Boolean 默认：true [是否开启高级优化（合并选择器等）]
+            advanced: false,
+            //保留ie7及以下兼容写法 类型：String 默认：''or'*' [启用兼容模式； 'ie7'：IE7兼容模式，'ie8'：IE8兼容模式，'*'：IE9+兼容模式]
+            compatibility: 'ie8',
+            //类型：Boolean 默认：false [是否保留换行]
+            keepBreaks: false
+        }))
+        .pipe(rename({ suffix: '.min' }))  //对压缩后的文件重命名
+        .pipe(gulp.dest('dist/demo/css/'))
+});
+
+// js文件压缩 ,在命令行项目目录下使用 gulp jsmin 启动此任务
+gulp.task('jsmin', function() {
+    gulp.src('docs/demo/js/*.js')              // 1. 找到文件
+        .pipe(jsmin())                       // 2. 压缩文件
+        .pipe(rename({extname:'.min.js'}))   // 3.对压缩文件重命名
+        .pipe(gulp.dest('dist/demo/js/'))             // 4. 输出压缩后的文件
+});
+ 
+//图片压缩,在命令行项目目录下使用 gulp imgmin 启动此任务
+gulp.task('imgmin', function() {
+    gulp.src('docs/demo/img/**/*.{png,jpg,gif,ico}')
+        .pipe(cache(imgmin({
+            optimizationLevel: 5,//类型：Number  默认：3  取值范围：0-7（优化等级）
+            progressive: true,   //类型：Boolean 默认：false 无损压缩jpg图片
+            interlaced: true,    //类型：Boolean 默认：false 隔行扫描gif进行渲染
+            multipass: true      //类型：Boolean 默认：false 多次优化svg直到完全优化
+        })))
+        .pipe(gulp.dest('dist/demo/img/'))
+});
+
+
+//字体文件复制
+// gulp.task('fonts',function(){
+//     gulp.src('docs/*/fonts')
+//         .pipe(gulp.dest('dist'))
+//         .pipe(notify({message: 'fonts task complete'}));
+// })
+
 //合并js或css文件等
 // gulp.task('scripts', function() {
 //     gulp.src('./js/*.js')
@@ -99,37 +169,11 @@ gulp.task('fonts',function(){
 //         .pipe(uglify())
 //         .pipe(gulp.dest('./dist'));
 // });
-// 
-// 编译SASS
-// gulp.task('sass', function(){
-//      
-// 
-// 
-// })
-// 
-// 
-//在任务执行前，最好先清除之前生成的文件：
-gulp.task('clean', function() {
-     return del(['dist']);  //删除发布环境文件
+
+
+// 开发完成执行打包任务,在命令行项目目录下使用 gulp 启动此任务
+gulp.task('package',['clean'],function(){  //在默认任务执行前，先执行清除任务
+    gulp.start('cssmin', 'jsmin', 'imgmin', 'htmlmin')
+        // .pipe(connect.reload())
+        // .pipe(notify({ message: 'package task complete' }));
 });
-
-
-
-// 默认任务,在命令行项目目录下使用 gulp 启动此任务
-gulp.task('default',['clean'],function(){  //在默认任务执行前，先执行清除任务
-    gulp.start('cssmin', 'jsmin', 'imgmin', 'htmlmin');
-});
-
-// 监听文件变化,在命令行项目目录下使用 gulp watch启动此任务,监听的文件有变化就自动执行
-// gulp.task('watch',function(){
-//     //监听css
-//     gulp.watch('docs/*/css/*.css',['cssmin']);
-//     //监听js
-//     gulp.watch('docs/*/js/*.js',['jsmin']);
-//     //监听img
-//     gulp.watch('docs/*/img/*/*.{png,jpg,gif,ico}',['imgmin']);
-//     //监听HTML
-//     gulp.watch('docs/*/*.html',['htmlmin']);
-// });
-
- 
