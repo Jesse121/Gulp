@@ -23,7 +23,9 @@ win+r输入cmd打开命令终端
 ####2.2 新建package.json文件
 npm init 配置package.json文件
 ####2.3 本地安装
-进入项目根目录再安装一遍`npm install gulp --save-dev `
+进入项目根目录再安装一遍`npm install gulp --save-dev `  
+npm从3.0.0开始，架包的依赖不再安装在每个架包的node_modules文件夹内，而是安装在顶层的node_modules文件夹中。所以安装的时候会生成许多文件包，如果要启用之前的风格，则可以添加命令参数legacy-bundling，如下：
+`npm install gulp --save-dev --legacy-bundling ` 
 
 ##3. 安装插件
 我们将要使用Gulp插件来完成以下任务：
@@ -42,8 +44,10 @@ npm init 配置package.json文件
 
 安装以上插件
 
-```npm install gulp-less gulp-ruby-sass gulp-connect gulp-uglify gulp-minify-css gulp-minify-html gulp-imagemin gulp-cache gulp-rename gulp-notify  del --save-dev
+```npm install gulp-less gulp-ruby-sass gulp-connect gulp-uglify gulp-minify-css gulp-minify-html gulp-imagemin gulp-cache gulp-rename gulp-notify  del --save-dev --legacy-bundling
 ```
+安装完成后可通过'gulp ls --depth=0'命令查看是否安装成功  
+如果不需要某个插件可通过'gulp uninstall <插件名称> --save-dev'进行删除
 
 ##4. 新建gulpfile.js文件
 说明：gulpfile.js是gulp项目的配置文件，是位于项目根目录的普通js文件

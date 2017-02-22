@@ -1,7 +1,7 @@
 //导入工具包 require('node_modules里对应模块')
 var gulp      = require('gulp');				    //本地安装gulp所用到的地方
 var	jsmin     = require('gulp-uglify');			    //JS文件压缩 
-var cssmin    = require('gulp-minify-css');         //css文件压缩
+var cssmin    = require('gulp-clean-css');         //css文件压缩
 var htmlmin   = require('gulp-minify-html');        //html文件压缩
 var cache     = require('gulp-cache');              //图片缓存
 var imgmin    = require('gulp-imagemin');           //图片压缩
@@ -16,8 +16,7 @@ var connect   = require('gulp-connect');            //实时刷新浏览器
 
 //docs 开发环境
 //dist 发布环境
-//demo 项目名称
-//每做一个项目需要修改项目名称
+//demo 项目名称,每做一个项目需要修改项目名称
 
 //gulp.task(name[, deps], fn)   定义任务  name：任务名称 deps：依赖任务名称 fn：回调函数
 //gulp.src(globs[, options])    执行任务处理的文件  globs：处理的文件路径(字符串或者字符串数组) 
@@ -27,8 +26,6 @@ var connect   = require('gulp-connect');            //实时刷新浏览器
 //**********************************//
 //以下是开发过程中的需要执行各种任务//
 //**********************************//
-
-
 
 //浏览器自动刷新页面
 gulp.task('connect', function() {
@@ -44,15 +41,25 @@ gulp.task('connect', function() {
 gulp.task('html', function() {
     gulp.src('docs/demo/*.html')
         .pipe(connect.reload())
-        .pipe(notify({ message: 'html has change' }));
+        .pipe(notify({ message: 'HTML has change' }));
 });
 
 //编译SASS  gulp sass
 gulp.task('sass', function(){
-    sass('docs/demo/css/scss/*.scss')
+    sass('docs/demo/css/scss/*.scss',{
+        //为scss编译的css添加sourcemap，使得在浏览器中能显示scss文件的具体行数
+        sourcemap: true,  
+        //Sass to CSS 的输出样式：nested,compact,expanded,compressed。
+        style:'expanded', 
+        //取消scss缓存
+        noCache:true,
+        //scss缓存文件的位置
+        //cacheLocation: 'docs/demo/css/scss/', 
+    })
+    .pipe(sourcemaps.write())
     .on('error', sass.logError)
     .pipe(gulp.dest('docs/demo/css/'))
-    .pipe(notify({ message: 'css has change' }))
+    .pipe(notify({ message: 'CSS has change' }))
     .pipe(connect.reload());
 })
 
@@ -67,7 +74,7 @@ gulp.task('sass', function(){
 //js文件有变化时，自动更新
 gulp.task('js', function() {
     gulp.src('docs/demo/js/*.js')
-        .pipe(notify({ message: 'javascript has change' }))
+        .pipe(notify({ message: 'JavaScript has change' }))
         .pipe(connect.reload());
 });
 
@@ -75,11 +82,12 @@ gulp.task('js', function() {
 // gulp.task('jshint', function() {
 //     gulp.src('docs/js/*.js')
 //         .pipe(jshint())
-//         // .pipe(jshint.reporter('default')); //默认在命令行里输出结果
-//         .pipe(jshint.reporter('gulp-jshint-html-reporter', {filename:'jshint-report.html'}));    //输出结果到自定义的html文件
+//         //默认在命令行里输出结果
+//         // .pipe(jshint.reporter('default')); 
+//          //输出结果到自定义的html文件
+//         .pipe(jshint.reporter('gulp-jshint-html-reporter', {filename:'jshint-report.html'})); 
 
 // });
-
 
 
 //**********************************//
@@ -110,12 +118,6 @@ gulp.task('clean', function() {
      return del(['dist']);  //删除发布环境文件
 });
 
-//html文件压缩,在命令行项目目录下使用 gulp htmlmin 启动此任务
-gulp.task('htmlmin', function () {
-    gulp.src('docs/demo/*.html')       // 要压缩的html文件
-        .pipe(htmlmin())            //压缩
-        .pipe(gulp.dest('dist/demo/'))
-});
 
 //css文件压缩,在命令行项目目录下使用 gulp cssmin 启动此任务
 gulp.task('cssmin', function () {
@@ -152,6 +154,13 @@ gulp.task('imgmin', function() {
         .pipe(gulp.dest('dist/demo/img/'))
 });
 
+//html文件压缩,在命令行项目目录下使用 gulp htmlmin 启动此任务
+gulp.task('htmlmin', function () {
+    gulp.src('docs/demo/*.html')       // 要压缩的html文件
+        .pipe(htmlmin())            //压缩
+        .pipe(gulp.dest('dist/demo/'))
+        .pipe(notify({ message: 'package task complete' }));
+});
 
 //字体文件复制
 // gulp.task('fonts',function(){
@@ -171,9 +180,5 @@ gulp.task('imgmin', function() {
 // });
 
 
-// 开发完成执行打包任务,在命令行项目目录下使用 gulp 启动此任务
-gulp.task('package',['clean'],function(){  //在默认任务执行前，先执行清除任务
-    gulp.start('cssmin', 'jsmin', 'imgmin', 'htmlmin')
-        // .pipe(connect.reload())
-        // .pipe(notify({ message: 'package task complete' }));
-});
+// 开发完成执行打包任务,在命令行项目目录下使用 gulp package启动此任务
+gulp.task('package',['clean','cssmin', 'jsmin', 'imgmin', 'htmlmin']);
