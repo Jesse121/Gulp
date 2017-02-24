@@ -1,2 +1,1 @@
-
-document.write("this must be some change123");
+document.write("this must be some change");

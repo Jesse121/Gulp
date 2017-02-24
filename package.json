@@ -6,23 +6,9 @@
   "directories": {
     "doc": "docs"
   },
-  "dependencies": {
-    "del": "^2.2.0",
-    "gulp-cache": "^0.4.3",
-    "gulp-concat": "^2.6.0",
-    "gulp-imagemin": "^2.4.0",
-    "gulp-jshint": "^2.0.0",
-    "gulp-less": "^3.0.5",
-    "gulp-minify-css": "^1.2.4",
-    "gulp-minify-html": "^1.0.6",
-    "gulp-notify": "^2.2.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-uglify": "^1.5.3",
-    "jshint": "^2.9.1"
-  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Jesse121/Gulp.git"
+    "url": "git@github.com:Jesse121/Gulp.git"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -38,10 +24,13 @@
     "gulp-cache": "^0.4.5",
     "gulp-clean-css": "^3.0.3",
     "gulp-connect": "^5.0.0",
+    "gulp-imagemin": "^3.1.1",
     "gulp-less": "^3.3.0",
+    "gulp-minify-html": "^1.0.6",
     "gulp-notify": "^2.2.0",
     "gulp-rename": "^1.2.2",
     "gulp-ruby-sass": "^2.1.1",
+    "gulp-sourcemaps": "^2.4.1",
     "gulp-uglify": "^1.5.4"
   }
 }

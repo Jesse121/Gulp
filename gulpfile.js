@@ -9,6 +9,7 @@ var notify    = require('gulp-notify');             //更动通知
 var rename    = require('gulp-rename');             //重命名
 var del       = require('del');
 var sass      = require('gulp-ruby-sass');          //编译SASS
+var sourcemaps= require('gulp-sourcemaps');          //使得浏览器能够直接调试SCSS
 var connect   = require('gulp-connect');            //实时刷新浏览器
 // var less      = require('gulp-less');			    // 编译Less
 // var jshint    = require('gulp-jshint');			//js代码检查
@@ -52,7 +53,7 @@ gulp.task('sass', function(){
         //Sass to CSS 的输出样式：nested,compact,expanded,compressed。
         style:'expanded', 
         //取消scss缓存
-        noCache:true,
+        noCache:true
         //scss缓存文件的位置
         //cacheLocation: 'docs/demo/css/scss/', 
     })
@@ -159,7 +160,7 @@ gulp.task('htmlmin', function () {
     gulp.src('docs/demo/*.html')       // 要压缩的html文件
         .pipe(htmlmin())            //压缩
         .pipe(gulp.dest('dist/demo/'))
-        .pipe(notify({ message: 'package task complete' }));
+        .pipe(notify({ message: 'Package task complete' }));
 });
 
 //字体文件复制
