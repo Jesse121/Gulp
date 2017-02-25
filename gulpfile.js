@@ -18,7 +18,7 @@ var connect   = require('gulp-connect');            //实时刷新浏览器
 //src 开发环境
 //dist 发布环境
 //demo 项目名称,每做一个项目需要修改项目名称
-var demo = 'Resume_v2';
+var demo = 'demo';
 //gulp.task(name[, deps], fn)   定义任务  name：任务名称 deps：依赖任务名称 fn：回调函数
 //gulp.src(globs[, options])    执行任务处理的文件  globs：处理的文件路径(字符串或者字符串数组) 
 //gulp.dest(path[, options])    处理完后文件生成路径
@@ -31,9 +31,10 @@ var demo = 'Resume_v2';
 //浏览器自动刷新页面
 gulp.task('connect', function() {
     connect.server({
-        // host: '192.168.1.172', //地址，可不写，不写的话，默认localhost
+        //地址，推荐写本地IP方便手机端同步调试，不写的话，默认localhost
+        host: '14.42.1.148', 
         port: 3000, //端口号，可不写，默认8000
-        root: './src/', //当前项目主目录
+        root: './src/'+demo+'/', //当前项目主目录
         livereload: true //自动刷新
     });
 });
@@ -43,6 +44,13 @@ gulp.task('html', function() {
     gulp.src('src/'+ demo + '/*.html')
         .pipe(connect.reload())
         .pipe(notify({ message: 'HTML has change' }));
+});
+
+//css文件有变化时，自动更新
+gulp.task('css', function() {
+    gulp.src('src/'+ demo + '/css/*.css')
+        .pipe(connect.reload())
+        .pipe(notify({ message: 'CSS has change' }));
 });
 
 //编译SASS  gulp sass
@@ -60,7 +68,7 @@ gulp.task('sass', function(){
     .pipe(sourcemaps.write())
     .on('error', sass.logError)
     .pipe(gulp.dest('src/'+ demo + '/css/'))
-    .pipe(notify({ message: 'CSS has change' }))
+    .pipe(notify({ message: 'SCSS has change' }))
     .pipe(connect.reload());
 })
 
@@ -100,6 +108,8 @@ gulp.task('watch',function(){
     //监听HTML
     gulp.watch('src/'+ demo + '/*.html',['html']);
     //监听css
+    gulp.watch('src/'+ demo + '/css/*.css',['css']);
+    //监听scss
     gulp.watch('src/'+ demo + '/css/scss/*.scss',['sass']);
     //监听js
     gulp.watch('src/'+ demo + '/js/*.js',['js']);
