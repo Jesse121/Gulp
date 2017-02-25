@@ -90,23 +90,31 @@ var connect   = require('gulp-connect');            //实时刷新浏览器
 //浏览器自动刷新页面
 gulp.task('connect', function() {
     connect.server({
-        // host: '192.168.1.172', //地址，可不写，不写的话，默认localhost
+        //地址，推荐写本地IP方便手机端同步调试，不写的话，默认localhost
+        host: '14.42.1.148', 
         port: 3000, //端口号，可不写，默认8000
-        root: './docs/', //当前项目主目录
+        root: './src/'+demo+'/', //当前项目主目录
         livereload: true //自动刷新
     });
 });
 
 //html文件有变化时，自动更新
 gulp.task('html', function() {
-    gulp.src('docs/demo/*.html')
+    gulp.src('src/'+ demo + '/*.html')
         .pipe(connect.reload())
         .pipe(notify({ message: 'HTML has change' }));
 });
 
+//当项目中只用CSS，且css文件有变化时，自动更新
+gulp.task('css', function() {
+    gulp.src('src/'+ demo + '/css/*.css')
+        .pipe(connect.reload())
+        .pipe(notify({ message: 'CSS has change' }));
+});
+
 //编译SASS  gulp sass
 gulp.task('sass', function(){
-    sass('docs/demo/css/scss/*.scss',{
+    sass('src/'+ demo + '/css/scss/*.scss',{
         //为scss编译的css添加sourcemap，使得在浏览器中能显示scss文件的具体行数
         sourcemap: true,  
         //Sass to CSS 的输出样式：nested,compact,expanded,compressed。
@@ -114,18 +122,18 @@ gulp.task('sass', function(){
         //取消scss缓存
         noCache:true
         //scss缓存文件的位置
-        //cacheLocation: 'docs/demo/css/scss/', 
+        //cacheLocation: 'src/'+ demo + '/css/scss/', 
     })
     .pipe(sourcemaps.write())
     .on('error', sass.logError)
-    .pipe(gulp.dest('docs/demo/css/'))
-    .pipe(notify({ message: 'CSS has change' }))
+    .pipe(gulp.dest('src/'+ demo + '/css/'))
+    .pipe(notify({ message: 'SCSS has change' }))
     .pipe(connect.reload());
 })
 
 // 编译Less ,在命令行项目目录下使用 gulp less 启动此任务
 // gulp.task('less', function () {
-//     gulp.src('docs/*/less/*.less')            //该任务针对的文件
+//     gulp.src('src/*/less/*.less')            //该任务针对的文件
 //         .pipe(less())                         //该任务调用的模块
 //         .pipe(gulp.dest('dist/css'))          //将会在dist/css下生成对应的css文件
 //         .pipe(notify({ message: 'less task complete' }));
@@ -133,14 +141,14 @@ gulp.task('sass', function(){
  
 //js文件有变化时，自动更新
 gulp.task('js', function() {
-    gulp.src('docs/demo/js/*.js')
+    gulp.src('src/'+ demo + '/js/*.js')
         .pipe(notify({ message: 'JavaScript has change' }))
         .pipe(connect.reload());
 });
 
 // js代码检查
 // gulp.task('jshint', function() {
-//     gulp.src('docs/js/*.js')
+//     gulp.src('src/js/*.js')
 //         .pipe(jshint())
 //         //默认在命令行里输出结果
 //         // .pipe(jshint.reporter('default')); 
@@ -157,11 +165,13 @@ gulp.task('js', function() {
 // 监听文件变化,在命令行项目目录下使用 gulp watch启动此任务,监听的文件有变化就自动执行
 gulp.task('watch',function(){
     //监听HTML
-    gulp.watch('docs/demo/*.html',['html']);
+    gulp.watch('src/'+ demo + '/*.html',['html']);
     //监听css
-    gulp.watch('docs/demo/css/scss/*.scss',['sass']);
+    gulp.watch('src/'+ demo + '/css/*.css',['css']);
+    //监听scss
+    gulp.watch('src/'+ demo + '/css/scss/*.scss',['sass']);
     //监听js
-    gulp.watch('docs/demo/js/*.js',['js']);
+    gulp.watch('src/'+ demo + '/js/*.js',['js']);
 });
 
 //项目开始编码时，执行gulp命令打开服务器并监听各文件变化，浏览器实时刷新
@@ -178,9 +188,10 @@ gulp.task('clean', function() {
      return del(['dist']);  //删除发布环境文件
 });
 
+
 //css文件压缩,在命令行项目目录下使用 gulp cssmin 启动此任务
 gulp.task('cssmin', function () {
-    gulp.src('docs/demo/css/*.css')
+    gulp.src('src/'+ demo + '/css/*.css')
         .pipe(cssmin({
             //类型：Boolean 默认：true [是否开启高级优化（合并选择器等）]
             advanced: false,
@@ -190,40 +201,40 @@ gulp.task('cssmin', function () {
             keepBreaks: false
         }))
         .pipe(rename({ suffix: '.min' }))  //对压缩后的文件重命名
-        .pipe(gulp.dest('dist/demo/css/'))
+        .pipe(gulp.dest('dist/'+ demo + '/css/'))
 });
 
 // js文件压缩 ,在命令行项目目录下使用 gulp jsmin 启动此任务
 gulp.task('jsmin', function() {
-    gulp.src('docs/demo/js/*.js')              // 1. 找到文件
+    gulp.src('src/'+ demo + '/js/*.js')              // 1. 找到文件
         .pipe(jsmin())                       // 2. 压缩文件
         .pipe(rename({extname:'.min.js'}))   // 3.对压缩文件重命名
-        .pipe(gulp.dest('dist/demo/js/'))             // 4. 输出压缩后的文件
+        .pipe(gulp.dest('dist/'+ demo + '/js/'))             // 4. 输出压缩后的文件
 });
  
 //图片压缩,在命令行项目目录下使用 gulp imgmin 启动此任务
 gulp.task('imgmin', function() {
-    gulp.src('docs/demo/img/**/*.{png,jpg,gif,ico}')
+    gulp.src('src/'+ demo + '/img/**/*.{png,jpg,gif,ico}')
         .pipe(cache(imgmin({
             optimizationLevel: 5,//类型：Number  默认：3  取值范围：0-7（优化等级）
             progressive: true,   //类型：Boolean 默认：false 无损压缩jpg图片
             interlaced: true,    //类型：Boolean 默认：false 隔行扫描gif进行渲染
             multipass: true      //类型：Boolean 默认：false 多次优化svg直到完全优化
         })))
-        .pipe(gulp.dest('dist/demo/img/'))
+        .pipe(gulp.dest('dist/'+ demo + '/img/'))
 });
 
 //html文件压缩,在命令行项目目录下使用 gulp htmlmin 启动此任务
 gulp.task('htmlmin', function () {
-    gulp.src('docs/demo/*.html')       // 要压缩的html文件
+    gulp.src('src/'+ demo + '/*.html')       // 要压缩的html文件
         .pipe(htmlmin())            //压缩
-        .pipe(gulp.dest('dist/demo/'))
+        .pipe(gulp.dest('dist/'+ demo + '/'))
         .pipe(notify({ message: 'Package task complete' }));
 });
 
 //字体文件复制
 // gulp.task('fonts',function(){
-//     gulp.src('docs/*/fonts')
+//     gulp.src('src/*/fonts')
 //         .pipe(gulp.dest('dist'))
 //         .pipe(notify({message: 'fonts task complete'}));
 // })

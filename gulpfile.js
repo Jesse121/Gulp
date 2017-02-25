@@ -46,7 +46,7 @@ gulp.task('html', function() {
         .pipe(notify({ message: 'HTML has change' }));
 });
 
-//css文件有变化时，自动更新
+//当项目中只用CSS，且css文件有变化时，自动更新
 gulp.task('css', function() {
     gulp.src('src/'+ demo + '/css/*.css')
         .pipe(connect.reload())
