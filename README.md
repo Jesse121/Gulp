@@ -1,4 +1,4 @@
-## 1.安装准备
+### 1.安装准备
 #### 1.1 Node.js安装
 在安装Gulp之前首先的安装Node.js,
 安装教程详见[Node.js 安装配置](http://www.runoob.com/nodejs/nodejs-install-setup.html)
@@ -17,7 +17,7 @@ win+r输入cmd打开命令终端
 3. cd www  进入www文件夹,直至根目录
 4. cd ..  退回上一级文件夹
 
-## 2. 安装Gulp
+### 2. 安装Gulp
 #### 2.1 全局安装
 在全局安装gulp`npm install gulp -g `
 #### 2.2 新建package.json文件
@@ -27,7 +27,7 @@ win+r输入cmd打开命令终端
 npm从3.0.0开始，架包的依赖不再安装在每个架包的node_modules文件夹内，而是安装在顶层的node_modules文件夹中。所以安装的时候会生成许多文件包，如果要启用之前的风格，则可以添加命令参数legacy-bundling，如下：
 `npm install gulp --save-dev --legacy-bundling ` 
 
-## 3. 安装插件
+### 3. 安装插件
 我们将要使用Gulp插件来完成以下任务：
 
 * less的编译（gulp-less）
@@ -51,9 +51,7 @@ npm install gulp-less gulp-ruby-sass gulp-connect gulp-uglify gulp-minify-css gu
 安装完成后可通过'npm ls --depth=0'命令查看是否安装成功  
 如果不需要某个插件可通过'gulp uninstall <插件名称> --save-dev'进行删除
 
-
-
-## 4. 新建gulpfile.js文件
+### 4. 新建gulpfile.js文件
 说明：gulpfile.js是gulp项目的配置文件，是位于项目根目录的普通js文件
 
 ```javascript
@@ -255,7 +253,7 @@ gulp.task('package',['clean','cssmin', 'jsmin', 'imgmin', 'htmlmin']);
 
 ```
 
-## 5. 运行Gulp
+### 5. 运行Gulp
 1. 通过终端命令行进入项目根目录
 2. 在命令行输入`gulp`进入项目开发监控状态  (说明：命令提示符执行gulp 任务名称)
 3. `gulp package`进行项目打包
