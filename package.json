@@ -1,7 +1,7 @@
 {
-  "name": "workplace",
-  "version": "1.0.0",
-  "description": "this is gulp",
+  "name": "Workplace-gulp",
+  "version": "1.1.0",
+  "description": "this is the workplace build with gulp",
   "main": "gulpfile.js",
   "directories": {
     "doc": "docs"
@@ -18,19 +18,21 @@
     "email": "jesse152@163.com"
   },
   "license": "ISC",
+  "dependencies": {
+    "gulp": "^3.9.1"
+  },
   "devDependencies": {
     "del": "^2.2.2",
-    "gulp": "^3.9.1",
     "gulp-cache": "^0.4.5",
     "gulp-clean-css": "^3.0.3",
-    "gulp-connect": "^5.0.0",
     "gulp-imagemin": "^3.1.1",
-    "gulp-less": "^3.3.0",
+    "gulp-livereload": "^3.8.1",
     "gulp-minify-html": "^1.0.6",
     "gulp-notify": "^2.2.0",
     "gulp-rename": "^1.2.2",
     "gulp-ruby-sass": "^2.1.1",
     "gulp-sourcemaps": "^2.4.1",
-    "gulp-uglify": "^1.5.4"
+    "gulp-uglify": "^1.5.4",
+    "gulp-webserver": "^0.9.1"
   }
 }

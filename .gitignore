@@ -1,3 +1,6 @@
 
 # dependencies
 /node_modules
+
+# design
+/project/*/src/design
