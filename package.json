@@ -26,7 +26,6 @@
     "gulp-cache": "^0.4.5",
     "gulp-clean-css": "^3.0.3",
     "gulp-imagemin": "^3.1.1",
-    "gulp-livereload": "^3.8.1",
     "gulp-minify-html": "^1.0.6",
     "gulp-notify": "^2.2.0",
     "gulp-rename": "^1.2.2",

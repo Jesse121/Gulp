@@ -4,7 +4,6 @@ var sass = require('gulp-ruby-sass'); //编译SASS
 var sourcemaps = require('gulp-sourcemaps'); //使得浏览器能够直接调试SCSS
 var notify = require('gulp-notify'); //更动通知
 var webserver = require('gulp-webserver'); //开启静态服务器
-var livereload = require('gulp-livereload'); //实时刷新浏览器
 
 var htmlmin = require('gulp-minify-html'); //html文件压缩
 var cssmin = require('gulp-clean-css'); //css文件压缩
@@ -52,7 +51,6 @@ gulp.task('webserver', function () {
 //html文件有变化时，自动更新
 gulp.task('html', function () {
     gulp.src('./src/*.html')
-        .pipe(livereload())
         .pipe(notify({
             message: 'HTML has been modified!'
         }));
@@ -61,7 +59,6 @@ gulp.task('html', function () {
 //css文件有变化时，自动更新
 gulp.task('css', function () {
     gulp.src('./src/css/*.css')
-        .pipe(livereload())
         .pipe(notify({
             message: 'CSS has been modified!'
         }));
@@ -82,7 +79,6 @@ gulp.task('sass', function () {
         .pipe(sourcemaps.write())
         .on('error', sass.logError)
         .pipe(gulp.dest('./src/css/'))
-        .pipe(livereload())
         .pipe(notify({
             message: 'SCSS has been modified!'
         }));
@@ -92,7 +88,6 @@ gulp.task('sass', function () {
 //js文件有变化时，自动更新
 gulp.task('js', function () {
     gulp.src('./src/js/*.js')
-        .pipe(livereload())
         .pipe(notify({
             message: 'JavaScript has been modified!'
         }));
