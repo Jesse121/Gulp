@@ -1,12 +1,12 @@
-body{
-	h1{
-		text-align: center;
-		color: red;
-		
-		@at-root{
-			.name{
-				color:red;
-			}
-		}
-	}
+body {
+  h1 {
+    text-align: center;
+    color: red;
+    @at-root {
+      .name {
+        transform: rotate(50deg);
+        color: red;
+      }
+    }
+  }
 }

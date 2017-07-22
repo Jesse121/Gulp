@@ -3,9 +3,7 @@ body h1 {
   color: red;
 }
 .name {
+  -webkit-transform: rotate(50deg);
+          transform: rotate(50deg);
   color: red;
 }
-
-
-
-/*# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJtYXBwaW5ncyI6IkFBQ0MsT0FBRTtFQUNELFVBQVUsRUFBRSxNQUFNO0VBQ2xCLEtBQUssRUFBRSxHQUFHOztBQUdULEtBQUs7RUFDSixLQUFLLEVBQUMsR0FBRyIsInNvdXJjZXMiOlsiZ2xvYmFsLnNjc3MiXSwibmFtZXMiOltdLCJmaWxlIjoiZ2xvYmFsLmNzcyIsInNvdXJjZXNDb250ZW50IjpbImJvZHl7XHJcblx0aDF7XHJcblx0XHR0ZXh0LWFsaWduOiBjZW50ZXI7XHJcblx0XHRjb2xvcjogcmVkO1xyXG5cdFx0XHJcblx0XHRAYXQtcm9vdHtcclxuXHRcdFx0Lm5hbWV7XHJcblx0XHRcdFx0Y29sb3I6cmVkO1xyXG5cdFx0XHR9XHJcblx0XHR9XHJcblx0fVxyXG59Il19 */
