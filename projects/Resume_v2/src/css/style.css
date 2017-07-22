@@ -1,0 +1,327 @@
+@charset "UTF-8";
+/**
+ * 
+ * @authors Jesse (jessework131@163.com)
+ * @date    2016-04-21 20:45:24
+ * 
+ */
+/*Mobile css reset*/
+body,
+dl,
+dd,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: 100%;
+}
+/*继承body设定的字体大小*/
+/* 根据屏幕大小改变文字大小 */
+@media screen and (min-width: 320px) and (max-width: 360px) {
+  /*手机屏幕在320px~360px之间*/
+  html {
+    font-size: 62.5%;
+    /*62.5%相当于10px，1rem=10px*/
+  }
+}
+@media screen and (min-width: 360px) and (max-width: 480px) {
+  /*手机屏幕在360px~480px之间*/
+  html {
+    font-size: 75%;
+    /*75%相当于12px，1rem=12px*/
+  }
+}
+@media screen and (min-width: 480px) and (max-width: 640px) {
+  /*手机屏幕在480px~640px之间*/
+  html {
+    font-size: 87.5%;
+    /*87.5%相当于14px，1rem=14px*/
+  }
+}
+@media screen and (min-width: 640px) {
+  /*手机屏幕在640px以上*/
+  html {
+    font-size: 100%;
+    /*100%相当于16px，1rem=16px*/
+  }
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+/* 禁用iPhone中Safari的字号自动调整 */
+body {
+  font-family: "microsoft yahei", Helvetica;
+  color: #555;
+  background-color: #F7F7F7;
+  margin: 0 auto;
+  height: 100%;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  -webkit-font-smoothing: antialiased;
+}
+.clearfix:after {
+  content: ".";
+  display: block;
+  visibility: hidden;
+  height: 0;
+  clear: both;
+}
+/*除去浮动*/
+a {
+  text-decoration: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  display: inline-block;
+}
+/*设置的tap  a标签的时候出现的黑色高亮*/
+a,
+a:hover,
+a:focus {
+  text-decoration: none;
+}
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+img {
+  max-width: 100%;
+  height: auto;
+}
+/* 图片自适应 */
+fieldset,
+img {
+  border: 0;
+}
+em,
+i {
+  font-style: normal;
+}
+/*如需默认样式可修改*/
+button,
+input,
+select,
+textarea {
+  vertical-align: middle;
+  outline: none;
+}
+/*除去获得焦点下的蓝色边框*/
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+  color: #ccc;
+}
+/*修改placeholder文字颜色*/
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  -webkit-appearance: none;
+  border-radius: 0;
+}
+/* 去除iphone ipad 设备默认按钮样式 */
+* {
+  box-sizing: border-box;
+}
+.section {
+  background-color: #10ad94;
+  transition: .25s;
+}
+.section.active {
+  background-color: #06c3a6;
+  color: #eef3f0;
+}
+.fp-tableCell {
+  text-align: center;
+  padding: 1rem;
+}
+h1 {
+  margin: 1rem 0 0 0;
+  font-size: 3rem;
+  text-shadow: 1px 1px #22c3aa,2px 2px #aee2d9;
+}
+h4 {
+  font-size: 1.25em;
+  margin: 0.5rem 0;
+}
+a {
+  color: #008a75;
+  text-decoration: none;
+  transition: 0.5s;
+}
+a:hover {
+  color: #9f3;
+}
+p {
+  font-size: 1.2rem;
+  margin: 0.5rem 0;
+}
+.section1 img {
+  width: 12rem;
+  border: .6rem solid #2ee2d9;
+  border-radius: 1rem;
+}
+.section1 .title {
+  margin: 1rem 0 0.25rem 0;
+  color: #aee2d9;
+  font-size: 1.4rem;
+}
+.section2 .skill {
+  width: 80%;
+  margin: 7rem auto 0;
+}
+.section2 .progress-bar {
+  text-align: left;
+}
+.section2 .progress-bar-special{
+  background-color:#4ee4f0;
+}
+.section2 .sr-only {
+  position: relative;
+  margin-left: 5px;
+}
+.section3 {
+  position: relative;
+}
+.section3 h1 {
+  position: absolute;
+  top: 15%;
+  width: 100%;
+  text-align: center;
+}
+.section3 .fp-slides {
+  height: 80%;
+}
+.section3 .fp-controlArrow {
+  width: 30px;
+  height: 55px;
+  border: none;
+  opacity: 0.6;
+}
+.section3 .fp-controlArrow:hover {
+  opacity: 0.9;
+}
+.section3 .fp-prev {
+  left: 100px;
+  background: url(../img/arrow-prev.gif) no-repeat scroll 0 0;
+}
+.section3 .fp-next {
+  right: 100px;
+  background: url(../img/arrow-next.gif) no-repeat scroll 0 0;
+}
+.section3 .fp-slidesNav.bottom {
+    display:none;
+}
+.section4 .fp-tableCell div {
+  float: left;
+  margin-top: 50px;
+}
+.section4 .fp-tableCell div p {
+  margin: 0;
+}
+.section4 .fp-tableCell div .time1 {
+  height: 127px;
+}
+.section4 .fp-tableCell div .time2 {
+  height: 149px;
+}
+.section4 .line-left {
+  width: 20%;
+  padding: 10px;
+  text-align: right;
+  overflow: hidden;
+}
+.section4 .line-right {
+  width: 60%;
+  padding: 10px;
+  text-align: left;
+}
+.section5 .profile {
+  position: absolute;
+  right: 30px;
+  top: 30px;
+  display: block;
+  width: 70px;
+  padding: 4px;
+  color: #fff;
+  background-color: #aee2d9;
+  border-radius: 5px;
+}
+.section5 .contact {
+  margin-top: 50px;
+  overflow: hidden;
+  text-align: left;
+}
+.section5 .contact-left {
+  float: left;
+  width: 60%;
+  padding-left: 25%;
+}
+.section5 .contact-left p:first-child {
+  font-size: 2rem;
+}
+.section5 .contact-right {
+  float: right;
+  width: 40%;
+}
+.section5 .contact-right p:first-child {
+  font-size: 1.5rem;
+}
+.section5 .contact-right img {
+  width: 40%;
+}
+@media screen and (max-width: 640px) {
+  #fp-nav {
+    display: none;
+  }
+  h1 {
+    text-shadow: none;
+  }
+  .section1 img {
+    border: none;
+  }
+  .section2 .skill {
+    width: 85%;
+  }
+  .section3 .title {
+    padding-top: 20%;
+  }
+  .section3 .fp-controlArrow {
+    display: none;
+  }
+  .section3 .fp-slidesNav.bottom {
+    display:block;
+  }
+  .section4 .line-left {
+    width: 25%;
+  }
+  .section4 .line {
+    width: 10%;
+    overflow: hidden;
+  }
+  .section5 .profile {
+    display: none;
+  }
+  .section5 .contact-left {
+    float: none;
+    padding-left: 15%;
+    width: 100%;
+  }
+  .section5 .contact-right {
+    float: none;
+    width: 100%;
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+}

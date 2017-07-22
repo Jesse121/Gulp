@@ -1,7 +1,7 @@
 {
   "name": "Workplace-gulp",
   "version": "1.1.0",
-  "description": "this is the workplace build with gulp",
+  "description": "this is my workplace established by gulp",
   "main": "gulpfile.js",
   "directories": {
     "doc": "docs"
@@ -9,9 +9,6 @@
   "repository": {
     "type": "git",
     "url": "git@github.com:Jesse121/Gulp.git"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": {
     "name": "Jesse",
@@ -23,8 +20,12 @@
   },
   "devDependencies": {
     "del": "^2.2.2",
+    "gulp-autoprefixer": "^4.0.0",
     "gulp-cache": "^0.4.5",
+    "gulp-changed": "^3.1.0",
     "gulp-clean-css": "^3.0.3",
+    "gulp-concat": "^2.6.1",
+    "gulp-copy": "^1.0.0",
     "gulp-imagemin": "^3.1.1",
     "gulp-minify-html": "^1.0.6",
     "gulp-notify": "^2.2.0",

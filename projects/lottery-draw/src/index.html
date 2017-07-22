@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>幸运大转盘</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <meta name="author" content="jesse">
+  <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+  <link rel="stylesheet" type="text/css" href="css/kinerLottery.css">
+</head>
+
+<body>
+  <div id="box" class="box">
+    <div class="outer KinerLottery KinerLotteryContent"><img src="./img/lanren.png"></div>
+    <!-- 大专盘分为三种状态：活动未开始（no-start）、活动进行中(start)、活动结束(completed),可通过切换class进行切换状态，js会根据这3个class进行匹配状态 -->
+    <div class="inner start" id="KinerLotteryBtn"></div>
+  </div>
+  <script src="js/zepto.min.js"></script>
+  <script src="js/kinerLottery.js"></script>
+  <script>
+    /**
+     * 根据转盘旋转角度判断获得什么奖品
+     * @param deg
+     * @returns {*}
+     */
+    function whichAward(deg) {
+      if ((deg > 330 && deg <= 360) || (deg > 0 && deg <= 30)) { //10M流量
+        return "流量10M";
+      } else if ((deg > 30 && deg <= 90)) { //IPhone 7
+        return "话费20元";
+      } else if (deg > 90 && deg <= 150) { //30M流量
+        return "ipad mini4";
+      } else if (deg > 150 && deg <= 210) { //5元话费
+        return "话费5元";
+      } else if (deg > 210 && deg <= 270) { //IPad mini 4
+        return "流量30M";
+      } else if (deg > 270 && deg <= 330) { //20元话费
+        return "iPhone7";
+      }
+    }
+    //修改alert函数，除去域名提示
+    (function() {
+      window.alert = function(name) {
+        var iframe = document.createElement("IFRAME");
+        iframe.style.display = "none";
+        iframe.setAttribute("src", 'data:text/plain');
+        document.documentElement.appendChild(iframe);
+        window.frames[0].window.alert(name);
+        iframe.parentNode.removeChild(iframe);
+      }
+    })();
+
+    var KinerLottery = new KinerLottery({
+      rotateNum: 8, //转盘转动圈数
+      body: "#box", //大转盘整体的选择符或zepto对象
+      direction: 0, //0为顺时针转动,1为逆时针转动
+      //禁止抽奖时回调
+      disabledHandler: function(key) {
+        switch (key) {
+          case "noStart":
+            alert("活动尚未开始");
+            break;
+          case "completed":
+            alert("活动已结束");
+            break;
+        }
+      }, 
+      //点击抽奖按钮,再次回调中实现访问后台获取抽奖结果,拿到抽奖结果后显示抽奖画面
+      clickCallback: function() {
+        //此处访问接口获取奖品
+        function random() {
+          return Math.floor(Math.random() * 360);
+        }
+        this.goKinerLottery(random());
+      }, 
+      //抽奖结束回调
+      KinerLotteryHandler: function(deg) {
+          alert("恭喜您获得:" + whichAward(deg));
+      } 
+    });
+  </script>
+</body>
+
+</html>
