@@ -3,4 +3,5 @@
 /node_modules
 
 # projects
-!/projects/Demo
+/projects/*
+!/projects/Demo/
