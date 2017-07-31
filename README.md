@@ -26,6 +26,7 @@ win+r输入cmd打开命令终端
 进入项目根目录再安装一遍`npm install gulp --save-dev `  
 
 ### 3. 安装插件
+**注意：以下插件不是最新的，这里只是介绍如何安装**   
 我们将要使用Gulp插件来完成以下任务：
 
 * sass的编译（gulp-ruby-sass）
@@ -69,7 +70,7 @@ var notify = require('gulp-notify');
 var webserver = require('gulp-webserver');
 
 //html文件压缩
-var htmlmin = require('gulp-minify-html');
+var htmlmin = require('gulp-htmlmin');
 //css文件压缩
 var cssmin = require('gulp-clean-css');
 //JS文件压缩 
@@ -82,16 +83,21 @@ var rename = require('gulp-rename');
 var copy = require('gulp-copy');
 // 只处理有变化的文件
 var changed = require('gulp-changed');
+// 替换压缩后的js和css文件名称
+var replace = require('gulp-replace');
 
 
 //不常用的插件
 //合并js或css文件等
-// var contact = require('gulp-concat');
+//var contact = require('gulp-concat');
 // var del = require('del'); 
 // var cache = require('gulp-cache');
-//gulp-babel babel-preset-nev
+//gulp-babel 
+//gulp-babel-preset-nev
 //gulp-rev
 //gulp-base64
+//gulp-if
+
 
 //src 开发环境
 //dist 发布环境
@@ -205,9 +211,21 @@ gulp.task('default', ['webserver', 'watch']);
 
 //html文件压缩,在命令行项目目录下使用 gulp htmlmin 启动此任务
 gulp.task('htmlmin', function() {
+  var options = {
+         removeComments: true,//清除HTML注释
+         collapseWhitespace: true,//压缩HTML
+         collapseBooleanAttributes: true,//省略布尔属性的值 <input checked="true"/> ==> <input />
+         removeEmptyAttributes: true,//删除所有空格作属性值 <input id="" /> ==> <input />
+         removeScriptTypeAttributes: true,//删除<script>的type="text/javascript"
+         removeStyleLinkTypeAttributes: true,//删除<style>和<link>的type="text/css"
+         minifyJS: true,//压缩页面JS
+         minifyCSS: true//压缩页面CSS
+     };
   gulp.src('./src/*.html')
     .pipe(changed('./dist/'))
-    .pipe(htmlmin())
+    .pipe(replace('global.css', 'global.min.css'))
+    .pipe(replace('public.js', 'public.min.js'))
+    .pipe(htmlmin(options))
     .pipe(gulp.dest('./dist/'))
     .pipe(notify({
       message: 'HTML has been packaged!'
@@ -242,7 +260,7 @@ gulp.task('jsmin', function() {
     .pipe(changed('./dist/'))
     .pipe(jsmin())
     .pipe(rename({
-      extname: '.min.js'
+      suffix: '.min'
     }))
     .pipe(gulp.dest('./dist/js/'))
     .pipe(notify({
@@ -260,28 +278,27 @@ gulp.task('imgmin', function() {
       interlaced: true, //类型：Boolean 默认：false 隔行扫描gif进行渲染
       svgoPlugins: [{removeViewBox: true}]
     }))
-    .pipe(gulp.dest('./dist/img/'))
-    .pipe(notify({
-      message: 'image has been packaged!'
-    }));
+    .pipe(gulp.dest('./dist/img/'));
 });
 
 //文件复制
 gulp.task('copy', function() {
-  gulp.src('./src/fonts/*')
-    .pipe(changed('./dist/fonts'))
+  gulp.src(['./src/fonts/*','./src/libs/**/*'])
     .pipe(copy('./dist/', { prefix: 1 }));
 })
 
+ 
+
 //合并js或css文件等
-gulp.task('scripts', function() {
-  gulp.src('./js/*.js')
-    .pipe(concat('bundle.js'))
-    .pipe(gulp.dest('./dist'))
-    .pipe(rename('bundle.min.js'))
-    .pipe(uglify())
-    .pipe(gulp.dest('./dist'));
-});
+// gulp.task('scripts', function() {
+//   gulp.src('./js/*.js')
+//     .pipe(concat('bundle.js'))
+//     .pipe(gulp.dest('./dist'))
+//     .pipe(rename('bundle.min.js'))
+//     .pipe(uglify())
+//     .pipe(gulp.dest('./dist'));
+// });
+
 
 // 开发完成执行打包任务,在命令行项目目录下使用 gulp build启动此任务
 gulp.task('build', ['cssmin', 'jsmin', 'imgmin', 'copy', 'htmlmin']);
