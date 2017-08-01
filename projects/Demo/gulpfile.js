@@ -28,6 +28,20 @@ var replace = require('gulp-replace'); // 替换压缩后的js和css文件名称
 //gulp-base64
 //gulp-if
 
+//获取当前ip地址
+function getIPAdress(){  
+    var interfaces = require('os').networkInterfaces();  
+    for(var devName in interfaces){  
+          var iface = interfaces[devName];  
+          for(var i=0;i<iface.length;i++){  
+               var alias = iface[i];  
+               if(alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal){  
+                     return alias.address;  
+               }  
+          }  
+    }  
+}
+
 
 //src 开发环境
 //dist 发布环境
@@ -42,12 +56,12 @@ var replace = require('gulp-replace'); // 替换压缩后的js和css文件名称
 //以下是开发过程中的需要执行各种任务//
 //**********************************//
 
-//开启静态服务器
-gulp.task('webserver', function() {
+//在开发环境中开启静态服务器
+gulp.task('webserver-src', function() {
   gulp.src('./src/')
     .pipe(webserver({
       //域名 推荐写内网IP方便手机端同步调试，默认localhost
-      // host: '14.42.0.39',
+      host: getIPAdress(),
       //端口 随机生成端口，方便多项目调试
       port: 3000 + Math.ceil(Math.random() * 9),
       //自动开启浏览器
@@ -130,13 +144,31 @@ gulp.task('watch', function() {
 });
 
 //项目开始编码时，执行gulp命令打开服务器并监听各文件变化，浏览器实时刷新
-gulp.task('default', ['webserver', 'watch']);
+gulp.task('default', ['webserver-src', 'watch']);
 
 
 
 //******************************************//
 //以下是开发结束后打包到生产环境中的各种任务//
 //******************************************//
+
+//在生产环境中开启静态服务器检查是否正常
+gulp.task('webserver-dist', function() {
+  gulp.src('./dist/')
+    .pipe(webserver({
+      //域名 推荐写内网IP方便手机端同步调试，默认localhost
+      host: getIPAdress(),
+      //端口 随机生成端口，方便多项目调试
+      port: 3000 + Math.ceil(Math.random() * 9),
+      //自动开启浏览器
+      open: true,
+      //展示目录列表，多页面时可采用此配置
+      // directoryListing: {
+      //     path: './dist/',
+      //     enable: true
+      // }
+    }))
+});
 
 
 //html文件压缩,在命令行项目目录下使用 gulp htmlmin 启动此任务
@@ -232,3 +264,5 @@ gulp.task('copy', function() {
 
 // 开发完成执行打包任务,在命令行项目目录下使用 gulp build启动此任务
 gulp.task('build', ['cssmin', 'jsmin', 'imgmin', 'copy', 'htmlmin']);
+// 开发完成后执行测试任务，开启服务器查看是否最终是否正常
+gulp.task('test', ['webserver-dist']);
