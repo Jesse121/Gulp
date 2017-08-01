@@ -1,35 +1,20 @@
-//导入工具包 require('node_modules里对应模块')
-//本地安装gulp所用到的地方
-var gulp = require('gulp');
-//编译SASS，需要安装ruby环境，
-var sass = require('gulp-ruby-sass');
-//自动添加css浏览器前缀
-var autoprefixer = require('gulp-autoprefixer');
-//使得浏览器能够直接调试SCSS
-var sourcemaps = require('gulp-sourcemaps');
-//忽略没有变化的文件
-var changed = require('gulp-changed');
-//更动通知
-var notify = require('gulp-notify');
-//开启静态服务器
-var webserver = require('gulp-webserver');
-
-//html文件压缩
-var htmlmin = require('gulp-htmlmin');
-//css文件压缩
-var cssmin = require('gulp-clean-css');
-//JS文件压缩 
-var jsmin = require('gulp-uglify');
-//图片压缩
-var imgmin = require('gulp-imagemin');
-//重命名
-var rename = require('gulp-rename');
-//文件复制
-var copy = require('gulp-copy');
-// 只处理有变化的文件
-var changed = require('gulp-changed');
-// 替换压缩后的js和css文件名称
-var replace = require('gulp-replace');
+//开发环境下使用的插件
+var gulp = require('gulp'); //本地安装gulp所用到的地方
+var sass = require('gulp-ruby-sass'); //编译SASS，需要安装ruby环境，
+var autoprefixer = require('gulp-autoprefixer'); //自动添加css浏览器前缀
+var sourcemaps = require('gulp-sourcemaps'); //使得浏览器能够直接调试SCSS
+var changed = require('gulp-changed'); //忽略没有变化的文件
+var notify = require('gulp-notify'); //更动通知
+var webserver = require('gulp-webserver'); //开启静态服务器
+//开发好后打包发布使用插件
+var htmlmin = require('gulp-htmlmin'); //html文件压缩
+var cssmin = require('gulp-clean-css'); //css文件压缩
+var jsmin = require('gulp-uglify'); //JS文件压缩 
+var imgmin = require('gulp-imagemin'); //图片压缩
+var rename = require('gulp-rename'); //重命名
+var copy = require('gulp-copy'); //文件复制
+var changed = require('gulp-changed'); // 只处理有变化的文件
+var replace = require('gulp-replace'); // 替换压缩后的js和css文件名称
 
 
 //不常用的插件
@@ -90,7 +75,7 @@ gulp.task('css', function() {
   gulp.src('./src/css/*.css')
     .pipe(autoprefixer({
       // 可根据项目需要自行配置需要兼容的版本
-      browsers: ['last 2 versions'] 
+      browsers: ['last 2 versions']
     }))
     .pipe(gulp.dest('./src/css/'))
     .pipe(notify({
@@ -157,15 +142,15 @@ gulp.task('default', ['webserver', 'watch']);
 //html文件压缩,在命令行项目目录下使用 gulp htmlmin 启动此任务
 gulp.task('htmlmin', function() {
   var options = {
-         removeComments: true,//清除HTML注释
-         collapseWhitespace: true,//压缩HTML
-         collapseBooleanAttributes: true,//省略布尔属性的值 <input checked="true"/> ==> <input />
-         removeEmptyAttributes: true,//删除所有空格作属性值 <input id="" /> ==> <input />
-         removeScriptTypeAttributes: true,//删除<script>的type="text/javascript"
-         removeStyleLinkTypeAttributes: true,//删除<style>和<link>的type="text/css"
-         minifyJS: true,//压缩页面JS
-         minifyCSS: true//压缩页面CSS
-     };
+    removeComments: true, //清除HTML注释
+    collapseWhitespace: true, //压缩HTML
+    collapseBooleanAttributes: true, //省略布尔属性的值 <input checked="true"/> ==> <input />
+    removeEmptyAttributes: true, //删除所有空格作属性值 <input id="" /> ==> <input />
+    removeScriptTypeAttributes: true, //删除<script>的type="text/javascript"
+    removeStyleLinkTypeAttributes: true, //删除<style>和<link>的type="text/css"
+    minifyJS: true, //压缩页面JS
+    minifyCSS: true //压缩页面CSS
+  };
   gulp.src('./src/*.html')
     .pipe(changed('./dist/'))
     .pipe(replace('global.css', 'global.min.css'))
@@ -221,18 +206,18 @@ gulp.task('imgmin', function() {
       optimizationLevel: 5, //类型：Number  默认：3  取值范围：0-7（优化等级）
       progressive: true, //类型：Boolean 默认：false 无损压缩jpg图片
       interlaced: true, //类型：Boolean 默认：false 隔行扫描gif进行渲染
-      svgoPlugins: [{removeViewBox: true}]
+      svgoPlugins: [{ removeViewBox: true }]
     }))
     .pipe(gulp.dest('./dist/img/'));
 });
 
 //文件复制
 gulp.task('copy', function() {
-  gulp.src(['./src/fonts/*','./src/libs/**/*'])
+  gulp.src(['./src/fonts/*', './src/libs/**/*'])
     .pipe(copy('./dist/', { prefix: 1 }));
 })
 
- 
+
 
 //合并js或css文件等
 // gulp.task('scripts', function() {
