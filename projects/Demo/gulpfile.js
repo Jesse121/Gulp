@@ -27,6 +27,7 @@ var replace = require('gulp-replace'); // 替换压缩后的js和css文件名称
 //gulp-rev
 //gulp-base64
 //gulp-if
+//gulp-minimist
 
 //获取当前ip地址
 function getIPAdress() {
