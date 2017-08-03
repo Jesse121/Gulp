@@ -6,6 +6,7 @@ var sourcemaps = require('gulp-sourcemaps'); //使得浏览器能够直接调试
 var changed = require('gulp-changed'); //忽略没有变化的文件
 var notify = require('gulp-notify'); //更动通知
 var webserver = require('gulp-webserver'); //开启静态服务器
+var spritesmith = require('gulp.spritesmith'); //图片自动生成css sprite
 //开发好后打包发布使用插件
 var htmlmin = require('gulp-htmlmin'); //html文件压缩
 var cssmin = require('gulp-clean-css'); //css文件压缩
@@ -18,8 +19,7 @@ var replace = require('gulp-replace'); // 替换压缩后的js和css文件名称
 
 
 //不常用的插件
-//合并js或css文件等
-//var contact = require('gulp-concat');
+// var contact = require('gulp-concat'); //合并js或css文件等
 // var del = require('del'); 
 // var cache = require('gulp-cache');
 //gulp-babel 
@@ -126,6 +126,21 @@ gulp.task('js', function() {
     }));
 });
 
+//图片自动生成css sprite
+gulp.task('sprite', function () {
+  gulp.src('./src/img/sprites/*.png')
+    .pipe(spritesmith({
+    imgName: 'sprite.png',
+    imgPath:'../img/sprite.png',
+    cssName: '../css/scss/sprite.scss',
+    cssFormat: 'scss',
+    padding: 5
+  }))
+  .pipe(gulp.dest('./src/img/'))
+  .pipe(notify({
+      message: 'CSSsprite has been finished!'
+    }));
+});
 
 //**********************************//
 //以下是开发调试过程中的各种监听任务//

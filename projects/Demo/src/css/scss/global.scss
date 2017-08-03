@@ -1,11 +1,17 @@
+@import 'sprite.scss';
+
 body {
   h1 {
     text-align: center;
     color: red;
     @at-root {
       .name {
-        transform: rotate(50deg);
-        color: red;
+        &:before {
+          content: "";
+          display:inline-block;
+          @include sprite($a);
+        } // transform: rotate(50deg);
+        background: red;
       }
     }
   }
