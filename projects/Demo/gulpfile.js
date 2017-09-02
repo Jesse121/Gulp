@@ -1,40 +1,42 @@
 //开发环境下使用的插件
-var gulp = require('gulp'); //本地安装gulp所用到的地方
-var sass = require('gulp-ruby-sass'); //编译SASS，需要安装ruby环境，
-var autoprefixer = require('gulp-autoprefixer'); //自动添加css浏览器前缀
-var sourcemaps = require('gulp-sourcemaps'); //使得浏览器能够直接调试SCSS
-var changed = require('gulp-changed'); //忽略没有变化的文件
-var notify = require('gulp-notify'); //更动通知
-var webserver = require('gulp-webserver'); //开启静态服务器
-var spritesmith = require('gulp.spritesmith'); //图片自动生成css sprite
+const gulp = require('gulp'); //本地安装gulp所用到的地方
+const sass = require('gulp-ruby-sass'); //编译SASS，需要安装ruby环境，
+const autoprefixer = require('gulp-autoprefixer'); //自动添加css浏览器前缀
+const sourcemaps = require('gulp-sourcemaps'); //使得浏览器能够直接调试SCSS
+const changed = require('gulp-changed'); //忽略没有变化的文件
+const notify = require('gulp-notify'); //更动通知
+const webserver = require('gulp-webserver'); //开启静态服务器
+const spritesmith = require('gulp.spritesmith'); //图片自动生成css sprite
 //开发好后打包发布使用插件
-var htmlmin = require('gulp-htmlmin'); //html文件压缩
-var cssmin = require('gulp-clean-css'); //css文件压缩
-var jsmin = require('gulp-uglify'); //JS文件压缩 
-var imgmin = require('gulp-imagemin'); //图片压缩
-var rename = require('gulp-rename'); //重命名
-var copy = require('gulp-copy'); //文件复制
-var changed = require('gulp-changed'); // 只处理有变化的文件
-var replace = require('gulp-replace'); // 替换压缩后的js和css文件名称
+const htmlmin = require('gulp-htmlmin'); //html文件压缩
+const cssmin = require('gulp-clean-css'); //css文件压缩
+const jsmin = require('gulp-uglify'); //JS文件压缩 
+const imgmin = require('gulp-imagemin'); //图片压缩
+const rename = require('gulp-rename'); //重命名
+const copy = require('gulp-copy'); //文件复制
+const replace = require('gulp-replace'); // 替换压缩后的js和css文件名称
+const rev = require('gulp-rev'); //为文件名添加hash值
+const revCollector = require('gulp-rev-collector'); //将html模板中的静态文件链接替换为带hash值文件
 
 
 //不常用的插件
-// var contact = require('gulp-concat'); //合并js或css文件等
-// var del = require('del'); 
-// var cache = require('gulp-cache');
+// const contact = require('gulp-concat'); //合并js或css文件等
+// const del = require('del'); 
+// const cache = require('gulp-cache');
 //gulp-babel 
 //gulp-babel-preset-nev
-//gulp-rev
 //gulp-base64
 //gulp-if
+//gulp-plumber 遇到错误gulp不终止
+//gulp-debug 调试现在执行到哪个任务
 
 //获取当前ip地址
 function getIPAdress() {
-  var interfaces = require('os').networkInterfaces();
-  for (var devName in interfaces) {
-    var iface = interfaces[devName];
-    for (var i = 0; i < iface.length; i++) {
-      var alias = iface[i];
+  const interfaces = require('os').networkInterfaces();
+  for (const devName in interfaces) {
+    const iface = interfaces[devName];
+    for (const i = 0; i < iface.length; i++) {
+      const alias = iface[i];
       if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
         return alias.address;
       }
@@ -127,17 +129,17 @@ gulp.task('js', function() {
 });
 
 //图片自动生成css sprite
-gulp.task('sprite', function () {
+gulp.task('sprite', function() {
   gulp.src('./src/img/sprites/*.png')
     .pipe(spritesmith({
-    imgName: 'sprite.png',
-    imgPath:'../img/sprite.png',
-    cssName: '../css/scss/sprite.scss',
-    cssFormat: 'scss',
-    padding: 5
-  }))
-  .pipe(gulp.dest('./src/img/'))
-  .pipe(notify({
+      imgName: 'sprite.png',
+      imgPath: '../img/sprite.png',
+      cssName: '../css/scss/sprite.scss',
+      cssFormat: 'scss',
+      padding: 5
+    }))
+    .pipe(gulp.dest('./src/img/'))
+    .pipe(notify({
       message: 'CSSsprite has been finished!'
     }));
 });
@@ -185,10 +187,25 @@ gulp.task('webserver-dist', function() {
     }))
 });
 
+//将html模板中的静态文件链接替换为带hash值的
+gulp.task('rev', function() {
+  return gulp.src(['./src/rev/*.json', './src/*.html'])
+    .pipe(revCollector({
+      replaceReved: true
+      // dirReplacements: {
+      //   'css': '/dist/css',
+      //   '/js/': '/dist/js/',
+      //   'cdn/': function(manifest_value) {
+      //     return '//cdn' + (Math.floor(Math.random() * 9) + 1) + '.' + 'exsample.dot' + '/img/' + manifest_value;
+      //   }
+      // }
+    }))
+    .pipe(gulp.dest('./dist/'));
+});
 
 //html文件压缩,在命令行项目目录下使用 gulp htmlmin 启动此任务
 gulp.task('htmlmin', function() {
-  var options = {
+  const options = {
     removeComments: true, //清除HTML注释
     collapseWhitespace: true, //压缩HTML
     collapseBooleanAttributes: true, //省略布尔属性的值 <input checked="true"/> ==> <input />
@@ -200,8 +217,6 @@ gulp.task('htmlmin', function() {
   };
   gulp.src('./src/*.html')
     .pipe(changed('./dist/'))
-    .pipe(replace('global.css', 'global.min.css'))
-    .pipe(replace('public.js', 'public.min.js'))
     .pipe(htmlmin(options))
     .pipe(gulp.dest('./dist/'))
     .pipe(notify({
@@ -236,10 +251,12 @@ gulp.task('jsmin', function() {
   gulp.src('./src/js/*.js')
     .pipe(changed('./dist/'))
     .pipe(jsmin())
-    .pipe(rename({
-      suffix: '.min'
-    }))
+    .pipe(rev()) //添加hash值
     .pipe(gulp.dest('./dist/js/'))
+    .pipe(rev.manifest({
+      base: 'src/rev/',
+      merge: true
+    })) //生成hash值映射文件manifest
     .pipe(notify({
       message: 'Javascript has been packaged!'
     }));
