@@ -1,22 +1,24 @@
 //开发环境下使用的插件
-const gulp = require('gulp'); //本地安装gulp所用到的地方
-const sass = require('gulp-ruby-sass'); //编译SASS，需要安装ruby环境，
-const autoprefixer = require('gulp-autoprefixer'); //自动添加css浏览器前缀
-const sourcemaps = require('gulp-sourcemaps'); //使得浏览器能够直接调试SCSS
-const changed = require('gulp-changed'); //忽略没有变化的文件
-const notify = require('gulp-notify'); //更动通知
-const webserver = require('gulp-webserver'); //开启静态服务器
-const spritesmith = require('gulp.spritesmith'); //图片自动生成css sprite
-//开发好后打包发布使用插件
-const htmlmin = require('gulp-htmlmin'); //html文件压缩
-const cssmin = require('gulp-clean-css'); //css文件压缩
-const jsmin = require('gulp-uglify'); //JS文件压缩 
-const imgmin = require('gulp-imagemin'); //图片压缩
-const rename = require('gulp-rename'); //重命名
-const copy = require('gulp-copy'); //文件复制
-const replace = require('gulp-replace'); // 替换压缩后的js和css文件名称
-const rev = require('gulp-rev'); //为文件名添加hash值
-const revCollector = require('gulp-rev-collector'); //将html模板中的静态文件链接替换为带hash值文件
+const gulp = require('gulp'), //本地安装gulp所用到的地方
+  sass = require('gulp-ruby-sass'), //编译SASS，需要安装ruby环境，
+  less = require('gulp-less'),
+  plumber = require('gulp-plumber') //遇到错误gulp不终止
+autoprefixer = require('gulp-autoprefixer'), //自动添加css浏览器前缀
+  sourcemaps = require('gulp-sourcemaps'), //使得浏览器能够直接调试SCSS
+  changed = require('gulp-changed'), //忽略没有变化的文件
+  notify = require('gulp-notify'), //更动通知
+  webserver = require('gulp-webserver'), //开启静态服务器
+  spritesmith = require('gulp.spritesmith'), //图片自动生成css sprite
+  //开发好后打包发布使用插件
+  htmlmin = require('gulp-htmlmin'), //html文件压缩
+  cssmin = require('gulp-clean-css'), //css文件压缩
+  jsmin = require('gulp-uglify'), //JS文件压缩 
+  imgmin = require('gulp-imagemin'), //图片压缩
+  rename = require('gulp-rename'), //重命名
+  copy = require('gulp-copy'), //文件复制
+  replace = require('gulp-replace'), // 替换压缩后的js和css文件名称
+  rev = require('gulp-rev'); //为文件名添加hash值
+revCollector = require('gulp-rev-collector'); //将html模板中的静态文件链接替换为带hash值文件
 
 
 //不常用的插件
@@ -27,16 +29,15 @@ const revCollector = require('gulp-rev-collector'); //将html模板中的静态�
 //gulp-babel-preset-nev
 //gulp-base64
 //gulp-if
-//gulp-plumber 遇到错误gulp不终止
 //gulp-debug 调试现在执行到哪个任务
 
 //获取当前ip地址
 function getIPAdress() {
-  const interfaces = require('os').networkInterfaces();
-  for (const devName in interfaces) {
-    const iface = interfaces[devName];
-    for (const i = 0; i < iface.length; i++) {
-      const alias = iface[i];
+  var interfaces = require('os').networkInterfaces();
+  for (var devName in interfaces) {
+    var iface = interfaces[devName];
+    for (var i = 0; i < iface.length; i++) {
+      var alias = iface[i];
       if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
         return alias.address;
       }
@@ -69,7 +70,7 @@ gulp.task('webserver-src', function() {
       //自动开启浏览器
       open: true,
       //实时刷新代码。
-      livereload: true,
+      livereload: true
       //展示目录列表，多页面时可采用此配置
       // directoryListing: {
       //     path: './src/',
@@ -119,6 +120,20 @@ gulp.task('sass', function() {
     }));
 });
 
+//将less文件编译为css文件  
+gulp.task('less', function() {
+  gulp.src('./src/css/less/*.less')
+    .pipe(plumber())
+    .pipe(sourcemaps.init())
+    .pipe(less())
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest('./src/css/'))
+    .pipe(notify({
+      message: 'less has been modified!'
+    }));
+});
+
+
 
 //js文件有变化时，自动更新
 gulp.task('js', function() {
@@ -156,6 +171,8 @@ gulp.task('watch', function() {
   gulp.watch('./src/css/*.css', ['css']);
   //监听scss
   gulp.watch('./src/css/scss/*.scss', ['sass']);
+  //监听less
+  gulp.watch('./src/css/less/*.less', ['less']);
   //监听js
   gulp.watch('./src/js/*.js', ['js']);
 });
