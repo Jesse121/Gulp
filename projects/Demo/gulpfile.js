@@ -13,13 +13,13 @@ autoprefixer = require('gulp-autoprefixer'), //自动添加css浏览器前缀
   htmlmin = require('gulp-htmlmin'), //html文件压缩
   cssmin = require('gulp-clean-css'), //css文件压缩
   jsmin = require('gulp-uglify'), //JS文件压缩 
-  imgmin = require('gulp-imagemin'), //图片压缩
+  tiny = require('gulp-tinypng-nokey'), //图片压缩
+  // imgmin = require('gulp-imagemin'), 
   rename = require('gulp-rename'), //重命名
   copy = require('gulp-copy'), //文件复制
   replace = require('gulp-replace'), // 替换压缩后的js和css文件名称
   rev = require('gulp-rev'); //为文件名添加hash值
 revCollector = require('gulp-rev-collector'); //将html模板中的静态文件链接替换为带hash值文件
-
 
 //不常用的插件
 // const contact = require('gulp-concat'); //合并js或css文件等
@@ -281,14 +281,9 @@ gulp.task('jsmin', function() {
 
 //图片压缩,在命令行项目目录下使用 gulp imgmin 启动此任务
 gulp.task('imgmin', function() {
-  gulp.src('./src/img/**/*.{png,jpeg,gif,ico,svg}')
-    .pipe(changed('./dist/'))
-    .pipe(imgmin({
-      optimizationLevel: 5, //类型：Number  默认：3  取值范围：0-7（优化等级）
-      progressive: true, //类型：Boolean 默认：false 无损压缩jpg图片
-      interlaced: true, //类型：Boolean 默认：false 隔行扫描gif进行渲染
-      svgoPlugins: [{ removeViewBox: true }]
-    }))
+  gulp.src('./src/img/**/*.{png,jpeg,jpg,gif,svg}')
+    // .pipe(changed('./dist/'))
+    .pipe(tiny())
     .pipe(gulp.dest('./dist/img/'));
 });
 
