@@ -1,4 +1,5 @@
 //开发环境下使用的插件
+
 const gulp = require('gulp'), //本地安装gulp所用到的地方
   sass = require('gulp-ruby-sass'), //编译SASS，需要安装ruby环境，
   less = require('gulp-less'),
@@ -29,8 +30,7 @@ revCollector = require('gulp-rev-collector'); //将html模板中的静态文件�
 //gulp-babel-preset-nev
 //gulp-base64
 //gulp-if
-//gulp-debug 调试现在执行到哪个任务
-
+//gulp-minimist//gulp-debug 调试现在执行到哪个任务
 //获取当前ip地址
 function getIPAdress() {
   var interfaces = require('os').networkInterfaces();
@@ -234,6 +234,7 @@ gulp.task('htmlmin', function() {
   };
   gulp.src('./src/*.html')
     .pipe(changed('./dist/'))
+
     .pipe(htmlmin(options))
     .pipe(gulp.dest('./dist/'))
     .pipe(notify({
@@ -268,6 +269,7 @@ gulp.task('jsmin', function() {
   gulp.src('./src/js/*.js')
     .pipe(changed('./dist/'))
     .pipe(jsmin())
+
     .pipe(rev()) //添加hash值
     .pipe(gulp.dest('./dist/js/'))
     .pipe(rev.manifest({

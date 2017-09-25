@@ -1,9 +1,11 @@
 @import 'sprite.scss';
+$width:100px;
 
 body {
   h1 {
     text-align: center;
     color: red;
+    width: $width;
     @at-root {
       .name {
         &:before {
