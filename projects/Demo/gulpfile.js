@@ -269,7 +269,6 @@ gulp.task('jsmin', function() {
   gulp.src('./src/js/*.js')
     .pipe(changed('./dist/'))
     .pipe(jsmin())
-
     .pipe(rev()) //添加hash值
     .pipe(gulp.dest('./dist/js/'))
     .pipe(rev.manifest({
